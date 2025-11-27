@@ -1,0 +1,24 @@
+---
+- name: Ensure PermitRootLogin is set to yes
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin yes'
+    state: present
+    validate: 'sshd -t -f %s'
+  notify: restart ssh
+
+- name: Ensure PasswordAuthentication is set to yes
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication yes'
+    state: present
+    validate: 'sshd -t -f %s'
+  notify: restart ssh
+
+- name: Add authorized key for root
+  authorized_key:
+    user: root
+    state: present
+    key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMnWnezyAh3GZqpYTQgPHAuRZl2w7QPSuMUtj6qSjmWXUy8hxlKDNC1+YhP0z0zLpfafYNAe3lGZbrWXBbZbUXYSpyLhhcjfysKN6ZyxZ1s7DzwSLJK2SmWaouU9aCLWOokoh8sZtDAcBsXg95JMDv1D3WlGsgyd+h8feVo6hg5Rzzy7LaDuYuy5Rsomfr89nPyhPNMtIn/IfJMwlm/8JVB4B5r8hDaS3mYvxGvXKR4iSu2O/NSP+PEpfs7HkzhggKai5vorD5IPZzPL9wZxGQ4kKG95VwoTTBsLarPR5ynzGw2x8n0BwLHV8WRUGMG5ntADtMvUVQTp30i/XidufR administrador@Mami"
